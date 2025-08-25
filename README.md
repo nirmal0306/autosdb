@@ -13,14 +13,22 @@ It is a simple PHP + MySQL web application that allows users to:
 
 ## 📂 Project Structure
 
-autosdb/
+## autosdb/
+
 │
+
 ├── config.php # Database connection
+
 ├── index.php # Redirects to login or autos.php
+
 ├── login.php # Login page
+
 ├── autos.php # Main application page
+
 ├── logout.php # Logout script
+
 ├── style.css # Styling for the app
+
 └── README.md # Project documentation
 
 ---
