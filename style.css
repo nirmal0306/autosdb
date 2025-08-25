@@ -1,44 +1,69 @@
+/* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f7f9;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f0f2f5;
     margin: 0;
     padding: 0;
+    color: #333;
 }
+
+/* Centered Container */
 .container {
     width: 500px;
     margin: 80px auto;
     background: #fff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
 }
+.container:hover {
+    transform: translateY(-2px);
+}
+
 h2, h3 {
     text-align: center;
-    color: #333;
+    color: #2c3e50;
+    margin-bottom: 15px;
 }
+
+/* Form Elements */
 label {
     display: block;
-    margin-top: 10px;
-    font-weight: bold;
+    margin-top: 12px;
+    font-weight: 600;
+    color: #444;
 }
 input {
-    width: 95%;
-    padding: 8px;
-    margin-top: 5px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
     border: 1px solid #ccc;
     border-radius: 6px;
+    font-size: 14px;
+    transition: border 0.2s;
 }
+input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Buttons */
 .btn {
+    display: inline-block;
     background: #007BFF;
     color: white;
     border: none;
-    padding: 10px 15px;
-    margin-top: 15px;
+    padding: 10px 18px;
+    margin-top: 18px;
     border-radius: 6px;
     cursor: pointer;
+    font-size: 15px;
+    transition: background 0.25s ease, transform 0.1s ease;
 }
 .btn:hover {
     background: #0056b3;
+    transform: translateY(-1px);
 }
 .cancel {
     background: #dc3545;
@@ -46,23 +71,43 @@ input {
 .cancel:hover {
     background: #a71d2a;
 }
+
+/* Messages */
 .error {
-    color: red;
+    color: #e63946;
     font-weight: bold;
+    margin-top: 8px;
+    text-align: center;
 }
 .success {
-    color: green;
+    color: #2d6a4f;
     font-weight: bold;
+    margin-top: 8px;
+    text-align: center;
 }
+
+/* Table Styles */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 18px;
+    border-radius: 8px;
+    overflow: hidden;
 }
-table, th, td {
-    border: 1px solid #ddd;
+table thead {
+    background: #007BFF;
+    color: white;
+    position: sticky;
+    top: 0;
 }
 th, td {
     text-align: center;
-    padding: 10px;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+tr:hover {
+    background: #f1f7ff;
 }
