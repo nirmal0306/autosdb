@@ -40,11 +40,11 @@ It is a simple PHP + MySQL web application that allows users to:
 3. Create a new MySQL database:
 
    ```sql
-   CREATE DATABASE autosdb;
-   USE autosdb;
    CREATE TABLE autos (
-       auto_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-       make VARCHAR(128),
-       year INT,
-       mileage INT
-   );
+    auto_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    make VARCHAR(128) NOT NULL,
+    year INT NOT NULL,
+    mileage INT NOT NULL,
+    PRIMARY KEY(auto_id)
+);
+
