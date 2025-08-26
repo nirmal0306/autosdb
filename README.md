@@ -1,6 +1,6 @@
-# 🚗 Autos Database (WA4E Assignment)
+# 🚗 Autos Database 
 
-This project is part of the [Building Database Applications in PHP (WA4E)](https://www.wa4e.com/) course.  
+This project is part of my learning php and i am glad to share this project with you all.
 It is a simple PHP + MySQL web application that allows users to:
 
 - Log in securely using PHP sessions
