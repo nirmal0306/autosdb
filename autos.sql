@@ -1,7 +1,7 @@
 CREATE TABLE autos (
-  autos_id INT AUTO_INCREMENT PRIMARY KEY,
-  make VARCHAR(128),
-  model VARCHAR(128),
-  year INT,
-  mileage INT
+    auto_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    make VARCHAR(128) NOT NULL,
+    year INT NOT NULL,
+    mileage INT NOT NULL,
+    PRIMARY KEY(auto_id)
 );

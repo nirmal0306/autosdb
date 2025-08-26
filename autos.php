@@ -2,77 +2,127 @@
 session_start();
 require_once "config.php";
 
+// Redirect to login if not logged in
 if (!isset($_SESSION['name'])) {
-    die('ACCESS DENIED');
+    header("Location: login.php");
+    exit;
 }
 
-if (isset($_POST['logout'])) {
-    header("Location: logout.php");
-    return;
-}
+// Default values for sticky form
+$make = "";
+$year = "";
+$mileage = "";
 
 // Add a new auto
-if (isset($_POST['make']) && isset($_POST['year']) && isset($_POST['mileage'])) {
-    if (strlen($_POST['make']) < 1) {
-        $_SESSION['error'] = "Make is required";
-    } elseif (!is_numeric($_POST['year']) || !is_numeric($_POST['mileage'])) {
-        $_SESSION['error'] = "Mileage and year must be numeric";
-    } else {
-        $stmt = $pdo->prepare('INSERT INTO autos (make, year, mileage) VALUES (:mk, :yr, :mi)');
-        $stmt->execute([
-            ':mk' => $_POST['make'],
-            ':yr' => $_POST['year'],
-            ':mi' => $_POST['mileage']
-        ]);
-        $_SESSION['success'] = "Record inserted";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $make = $_POST['make'] ?? "";
+    $year = $_POST['year'] ?? "";
+    $mileage = $_POST['mileage'] ?? "";
+
+    if (isset($_POST['add'])) {
+        if (strlen($make) < 1) {
+            $_SESSION['error'] = "Make is required";
+        } elseif (!is_numeric($year) || !is_numeric($mileage)) {
+            $_SESSION['error'] = "Mileage and year must be numeric";
+        } else {
+            $stmt = $pdo->prepare(
+                'INSERT INTO autos (make, year, mileage) VALUES (:mk, :yr, :mi)'
+            );
+            $stmt->execute([
+                ':mk' => $make,
+                ':yr' => $year,
+                ':mi' => $mileage
+            ]);
+            $_SESSION['success'] = "Record inserted";
+            header("Location: autos.php");
+            exit;
+        }
     }
-    header("Location: autos.php");
-    return;
+
+    if (isset($_POST['logout'])) {
+        header("Location: logout.php");
+        exit;
+    }
 }
 
 // Fetch autos
-$rows = $pdo->query("SELECT make, year, mileage FROM autos");
+$stmt = $pdo->query("SELECT make, year, mileage FROM autos");
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Autos Database</title>
+    <title>Autos Database - <?= htmlentities($_SESSION['name']) ?></title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background:#f9f9f9; }
+        .container { max-width: 700px; margin: auto; background:white; padding:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+        h1 { text-align:center; }
+        .msg { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+        .autos-list {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .autos-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            font-weight: bold;
+            background: #e3e3e3;
+            padding: 10px;
+            border-bottom: 2px solid #000;
+        }
+        .form-control { width: 100%; padding: 8px; margin: 4px 0; }
+        .btn { padding: 8px 14px; border:none; border-radius:4px; cursor:pointer; }
+        .btn.add { background: #28a745; color:white; }
+        .btn.logout { background: #dc3545; color:white; float:right; }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h2>Tracking Autos for <?= htmlentities($_SESSION['name']); ?></h2>
+    <h1>Tracking Autos for <?= htmlentities($_SESSION['name']); ?></h1>
+
     <?php
     if (isset($_SESSION['error'])) {
-        echo '<p class="error">'.htmlentities($_SESSION['error'])."</p>\n";
+        echo('<p class="msg">'.htmlentities($_SESSION['error'])."</p>\n");
         unset($_SESSION['error']);
     }
     if (isset($_SESSION['success'])) {
-        echo '<p class="success">'.htmlentities($_SESSION['success'])."</p>\n";
+        echo('<p class="success">'.htmlentities($_SESSION['success'])."</p>\n");
         unset($_SESSION['success']);
     }
     ?>
+
     <form method="post">
-        <label for="make">Make:</label>
-        <input type="text" name="make" id="make"><br>
-        <label for="year">Year:</label>
-        <input type="text" name="year" id="year"><br>
-        <label for="mileage">Mileage:</label>
-        <input type="text" name="mileage" id="mileage"><br>
-        <button type="submit" class="btn">Add</button>
-        <button type="submit" name="logout" class="btn cancel">Logout</button>
+        <p>Make: <input type="text" name="make" class="form-control" value="<?= htmlentities($make) ?>"></p>
+        <p>Year: <input type="text" name="year" class="form-control" value="<?= htmlentities($year) ?>"></p>
+        <p>Mileage: <input type="text" name="mileage" class="form-control" value="<?= htmlentities($mileage) ?>"></p>
+        <p>
+            <button type="submit" name="add" class="btn add">Add</button>
+            <button type="submit" name="logout" class="btn logout">Logout</button>
+        </p>
     </form>
-    <h3>Automobiles</h3>
-    <table>
-        <tr><th>Make</th><th>Year</th><th>Mileage</th></tr>
-        <?php
-        foreach ($rows as $row) {
-            echo "<tr><td>".htmlentities($row['make'])."</td>";
-            echo "<td>".htmlentities($row['year'])."</td>";
-            echo "<td>".htmlentities($row['mileage'])."</td></tr>";
-        }
-        ?>
-    </table>
+
+    <h2>Automobiles</h2>
+    <?php if (count($rows) > 0) { ?>
+        <div class="autos-header">
+            <div>Year</div>
+            <div>Make</div>
+            <div>Mileage</div>
+        </div>
+        <?php foreach ($rows as $row) { ?>
+            <div class="autos-list">
+                <div><?= htmlentities($row['year']) ?></div>
+                <div><?= htmlentities($row['make']) ?></div>
+                <div><?= htmlentities($row['mileage']) ?></div>
+            </div>
+        <?php } ?>
+    <?php } else { ?>
+        <p>No records found</p>
+    <?php } ?>
 </div>
 </body>
 </html>
