@@ -16,20 +16,29 @@ It is a simple PHP + MySQL web application that allows users to:
 ## autosdb/
 
 │
+## autosdb/
 
-├── config.php # Database connection
+│── add.php          # Form to add a new automobile record (make, year, mileage)
 
-├── index.php # Redirects to login or autos.php
+│── autos.php        # Main page showing all automobiles + edit/delete actions
 
-├── login.php # Login page
+│── autos.sql        # SQL file to create the `autos` table (schema + sample data)
 
-├── autos.php # Main application page
+│── config.php       # Database connection file (PDO or MySQLi config)
 
-├── logout.php # Logout script
+│── delete.php       # Script to delete an automobile by its auto_id
 
-├── style.css # Styling for the app
+│── edit.php         # Form to edit an existing automobile record
 
-└── README.md # Project documentation
+│── index.php        # Entry / home page (often login redirect or welcome page)
+
+│── login.php        # User login page (start session, validate user)
+
+│── logout.php       # Logout script (destroy session, redirect to login)
+
+│── README.md        # Project documentation (setup steps, usage, notes)
+
+│── style.css        # Central stylesheet for consistent UI design
 
 ---
 
